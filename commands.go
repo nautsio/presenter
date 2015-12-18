@@ -6,11 +6,19 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"text/template"
 
 	"path/filepath"
 
 	"github.com/codegangsta/cli"
+	"github.com/elazarl/go-bindata-assetfs"
 )
+
+// Option is passed to the templating engine.
+type Option struct {
+	Markdown string
+	Master   bool
+}
 
 // Commands is an array containing the available commands.
 var Commands = []cli.Command{
@@ -87,6 +95,28 @@ func doInit(c *cli.Context) {
 }
 
 func doServe(c *cli.Context) {
+	mdFilePath := c.Args()[0]
+	mdFileName := filepath.Base(mdFilePath)
+
+	// markdown file
+	http.HandleFunc("/"+mdFileName,
+		func(w http.ResponseWriter, r *http.Request) {
+			t, _ := template.ParseFiles(mdFilePath)
+			t.Execute(w, "")
+		})
+
+	http.Handle("/css/", http.FileServer(&assetfs.AssetFS{Asset, AssetDir, "reveal.js"}))
+	http.Handle("/js/", http.FileServer(&assetfs.AssetFS{Asset, AssetDir, "reveal.js"}))
+	http.Handle("/lib/", http.FileServer(&assetfs.AssetFS{Asset, AssetDir, "reveal.js"}))
+	http.Handle("/plugin/", http.FileServer(&assetfs.AssetFS{Asset, AssetDir, "reveal.js"}))
+	http.Handle("/assets/", http.FileServer(&assetfs.AssetFS{Asset, AssetDir, ""}))
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		opt := &Option{Markdown: mdFileName, Master: false}
+		indexHTML, _ := Asset("templates/index.html")
+		indexTemplate := template.Must(template.New("index").Parse(string(indexHTML)))
+		indexTemplate.Execute(w, opt)
+	})
+
 	fmt.Println("Presenting at http://localhost:8989")
 
 	err := http.ListenAndServe(":8989", nil)
