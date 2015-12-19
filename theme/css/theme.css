@@ -309,7 +309,7 @@ body {
   display: block;
 }
 div[role=application]:after {
-  background: url(http://cdn.nauts.io/img/cargonaut.svg);
+  background: url(/theme/img/cargonaut.svg);
   position: fixed;
   z-index: 30;
   width: 26vh;
