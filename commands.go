@@ -6,12 +6,14 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"path"
 	"text/template"
 
 	"path/filepath"
 
 	"github.com/codegangsta/cli"
 	"github.com/elazarl/go-bindata-assetfs"
+	"github.com/pkg/browser"
 )
 
 // Option is passed to the templating engine.
@@ -63,15 +65,21 @@ func doInit(c *cli.Context) {
 func doServe(c *cli.Context) {
 	slidesPath := c.Args()[0]
 	slidesFile := filepath.Base(slidesPath)
+	slidesWD, _ := os.Getwd()
 
 	master := c.Bool("master")
 
-	// markdown file
+	// Handle the slides
 	http.HandleFunc("/"+slidesFile,
 		func(w http.ResponseWriter, r *http.Request) {
 			t, _ := template.ParseFiles(slidesPath)
 			t.Execute(w, "")
 		})
+
+	// Handle the images
+	http.HandleFunc("/img/", func(w http.ResponseWriter, r *http.Request) {
+		http.ServeFile(w, r, path.Join(slidesWD, r.URL.Path))
+	})
 
 	http.Handle("/css/", http.FileServer(&assetfs.AssetFS{Asset, AssetDir, "reveal.js"}))
 	http.Handle("/js/", http.FileServer(&assetfs.AssetFS{Asset, AssetDir, "reveal.js"}))
@@ -86,7 +94,8 @@ func doServe(c *cli.Context) {
 		indexTemplate.Execute(w, opt)
 	})
 
-	fmt.Println("Presenting at http://localhost:8989")
+	fmt.Println("Opening browser and redirecting to the presentation ...")
+	browser.OpenURL("http://localhost:8989")
 
 	err := http.ListenAndServe(":8989", nil)
 	panic("Error while serving slides: " + err.Error())
