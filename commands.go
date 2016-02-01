@@ -7,9 +7,9 @@ import (
 	"net/http"
 	"os"
 	"path"
-	"text/template"
-
 	"path/filepath"
+	"strings"
+	"text/template"
 
 	"github.com/codegangsta/cli"
 	"github.com/elazarl/go-bindata-assetfs"
@@ -63,22 +63,31 @@ func doInit(c *cli.Context) {
 }
 
 func doServe(c *cli.Context) {
-	slidesPath := c.Args()[0]
-	slidesFile := filepath.Base(slidesPath)
-	slidesWD, _ := os.Getwd()
-
 	master := c.Bool("master")
 
+	presentationPath, _ := os.Getwd()
+	if len(c.Args()) > 0 {
+		presentationPath = c.Args()[0]
+	}
+
+	if !strings.HasPrefix(presentationPath, "/") {
+		presentationPath, _ = filepath.Abs(presentationPath)
+	}
+
+	if _, err := os.Stat(path.Join(presentationPath, "/slides.md")); err != nil {
+		fmt.Printf("slides.md does not exist at %s\n", presentationPath)
+		os.Exit(1)
+	}
+
 	// Handle the slides
-	http.HandleFunc("/"+slidesFile,
-		func(w http.ResponseWriter, r *http.Request) {
-			t, _ := template.ParseFiles(slidesPath)
-			t.Execute(w, "")
-		})
+	http.HandleFunc("/slides.md", func(w http.ResponseWriter, r *http.Request) {
+		t, _ := template.ParseFiles(path.Join(presentationPath, "slides.md"))
+		t.Execute(w, "")
+	})
 
 	// Handle the images
 	http.HandleFunc("/img/", func(w http.ResponseWriter, r *http.Request) {
-		http.ServeFile(w, r, path.Join(slidesWD, r.URL.Path))
+		http.ServeFile(w, r, path.Join(presentationPath, r.URL.Path))
 	})
 
 	http.Handle("/css/", http.FileServer(&assetfs.AssetFS{Asset, AssetDir, "reveal.js"}))
@@ -88,7 +97,7 @@ func doServe(c *cli.Context) {
 	http.Handle("/theme/", http.FileServer(&assetfs.AssetFS{Asset, AssetDir, ""}))
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		opt := &Option{Markdown: slidesFile, Master: master}
+		opt := &Option{Markdown: "slides.md", Master: master}
 		indexHTML, _ := Asset("theme/index.html")
 		indexTemplate := template.Must(template.New("index").Parse(string(indexHTML)))
 		indexTemplate.Execute(w, opt)
