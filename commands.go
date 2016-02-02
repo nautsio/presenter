@@ -89,8 +89,8 @@ func doServe(c *cli.Context) {
 
 	if theme != "" {
 		fmt.Println("Using one of the packaged themes ...")
-		http.Handle("/css/", http.FileServer(&assetfs.AssetFS{Asset, AssetDir, "themes/" + theme}))
-		http.Handle("/fonts/", http.FileServer(&assetfs.AssetFS{Asset, AssetDir, "themes/" + theme}))
+		http.Handle("/css/", http.FileServer(&assetfs.AssetFS{Asset, AssetDir, AssetInfo, "themes/" + theme}))
+		http.Handle("/fonts/", http.FileServer(&assetfs.AssetFS{Asset, AssetDir, AssetInfo, "themes/" + theme}))
 	} else {
 		if _, err := os.Stat(path.Join(presentationPath, "css", "theme.css")); err == nil {
 			fmt.Println("Found a theme, using it ...")
@@ -113,10 +113,10 @@ func doServe(c *cli.Context) {
 	})
 
 	// Handle reveal.js files.
-	http.Handle("/reveal.js/css/", http.FileServer(&assetfs.AssetFS{Asset, AssetDir, ""}))
-	http.Handle("/reveal.js/js/", http.FileServer(&assetfs.AssetFS{Asset, AssetDir, ""}))
-	http.Handle("/reveal.js/lib/", http.FileServer(&assetfs.AssetFS{Asset, AssetDir, ""}))
-	http.Handle("/reveal.js/plugin/", http.FileServer(&assetfs.AssetFS{Asset, AssetDir, ""}))
+	http.Handle("/reveal.js/css/", http.FileServer(&assetfs.AssetFS{Asset, AssetDir, AssetInfo, ""}))
+	http.Handle("/reveal.js/js/", http.FileServer(&assetfs.AssetFS{Asset, AssetDir, AssetInfo, ""}))
+	http.Handle("/reveal.js/lib/", http.FileServer(&assetfs.AssetFS{Asset, AssetDir, AssetInfo, ""}))
+	http.Handle("/reveal.js/plugin/", http.FileServer(&assetfs.AssetFS{Asset, AssetDir, AssetInfo, ""}))
 
 	// Handle the website.
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
