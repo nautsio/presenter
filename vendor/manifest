@@ -1,0 +1,23 @@
+{
+	"version": 0,
+	"dependencies": [
+		{
+			"importpath": "github.com/codegangsta/cli",
+			"repository": "https://github.com/codegangsta/cli",
+			"revision": "cf1f63a7274872768d4037305d572b70b1199397",
+			"branch": "master"
+		},
+		{
+			"importpath": "github.com/elazarl/go-bindata-assetfs",
+			"repository": "https://github.com/elazarl/go-bindata-assetfs",
+			"revision": "57eb5e1fc594ad4b0b1dbea7b286d299e0cb43c2",
+			"branch": "master"
+		},
+		{
+			"importpath": "github.com/pkg/browser",
+			"repository": "https://github.com/pkg/browser",
+			"revision": "9302be274faad99162b9d48ec97b24306872ebb0",
+			"branch": "master"
+		}
+	]
+}
