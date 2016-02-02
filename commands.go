@@ -45,6 +45,10 @@ var commandServe = cli.Command{
 			Name:  "master, m",
 			Usage: "Start presenter in master mode",
 		},
+		cli.StringFlag{
+			Name:  "theme, t",
+			Usage: "Use one of the built in themes",
+		},
 	},
 }
 
@@ -64,6 +68,7 @@ func doInit(c *cli.Context) {
 
 func doServe(c *cli.Context) {
 	master := c.Bool("master")
+	theme := c.String("theme")
 
 	// Get the presentation path from the command line, or grab the current directory.
 	presentationPath, _ := os.Getwd()
@@ -77,9 +82,23 @@ func doServe(c *cli.Context) {
 	}
 
 	// Check if there is a presentation file present.
-	if _, err := os.Stat(path.Join(presentationPath, "/slides.md")); err != nil {
+	if _, err := os.Stat(path.Join(presentationPath, "slides.md")); err != nil {
 		fmt.Printf("slides.md does not exist at %s\n", presentationPath)
 		os.Exit(1)
+	}
+
+	if theme != "" {
+		fmt.Println("Using one of the packaged themes ...")
+		http.Handle("/css/", http.FileServer(&assetfs.AssetFS{Asset, AssetDir, "themes/" + theme}))
+		http.Handle("/fonts/", http.FileServer(&assetfs.AssetFS{Asset, AssetDir, "themes/" + theme}))
+	} else {
+		if _, err := os.Stat(path.Join(presentationPath, "css", "theme.css")); err == nil {
+			fmt.Println("Found a theme, using it ...")
+			http.Handle("/css/", http.FileServer(http.Dir(presentationPath)))
+			http.Handle("/fonts/", http.FileServer(http.Dir(presentationPath)))
+		} else {
+			fmt.Println("No theme found ...")
+		}
 	}
 
 	// Handle the slides.
@@ -94,16 +113,15 @@ func doServe(c *cli.Context) {
 	})
 
 	// Handle reveal.js files.
-	http.Handle("/css/", http.FileServer(&assetfs.AssetFS{Asset, AssetDir, "reveal.js"}))
-	http.Handle("/js/", http.FileServer(&assetfs.AssetFS{Asset, AssetDir, "reveal.js"}))
-	http.Handle("/lib/", http.FileServer(&assetfs.AssetFS{Asset, AssetDir, "reveal.js"}))
-	http.Handle("/plugin/", http.FileServer(&assetfs.AssetFS{Asset, AssetDir, "reveal.js"}))
-	http.Handle("/theme/", http.FileServer(&assetfs.AssetFS{Asset, AssetDir, ""}))
+	http.Handle("/reveal.js/css/", http.FileServer(&assetfs.AssetFS{Asset, AssetDir, ""}))
+	http.Handle("/reveal.js/js/", http.FileServer(&assetfs.AssetFS{Asset, AssetDir, ""}))
+	http.Handle("/reveal.js/lib/", http.FileServer(&assetfs.AssetFS{Asset, AssetDir, ""}))
+	http.Handle("/reveal.js/plugin/", http.FileServer(&assetfs.AssetFS{Asset, AssetDir, ""}))
 
 	// Handle the website.
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		opt := &Option{Markdown: "slides.md", Master: master}
-		indexHTML, _ := Asset("theme/index.html")
+		indexHTML, _ := Asset("assets/index.html")
 		indexTemplate := template.Must(template.New("index").Parse(string(indexHTML)))
 		indexTemplate.Execute(w, opt)
 	})
