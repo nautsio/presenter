@@ -4,6 +4,14 @@ If you have edited any of the theme or asset files, you will need to generate th
 make assets
 ```
 
+To build the project use gb.
+```
+go get github.com/constabulary/gb/...
+
+gb vendor restore
+gb build all
+```
+
 ## Presentation structure
 The structure of a presentation folder is expected to look similar to this:
 ```
