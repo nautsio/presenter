@@ -23,12 +23,10 @@ The structure of a presentation folder is expected to look similar to this:
 ├── css             (custom styling should go in theme.css)
 │   └── theme.css
 ├── img             (images that are used in the presentation or self-made theme go here)
-│   ├── logo.png
 └── slides.md       (slides are expected to be in the slides.md file)
 ```
 
 ## Creating a presentation
-**NOT YET WORKING CORRECTLY**   
 An example presentation directory can be created by running the init command.
 ```
 // Create a presentation directory called "presentation":
