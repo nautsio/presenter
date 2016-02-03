@@ -4,6 +4,7 @@ If you have edited any of the theme or asset files, you will need to generate th
 make assets
 ```
 
+## Presentation structure
 The structure of a presentation folder is expected to look similar to this:
 ```
 ├── css             (custom styling should go in theme.css)
@@ -13,7 +14,8 @@ The structure of a presentation folder is expected to look similar to this:
 └── slides.md       (slides are expected to be in the slides.md file)
 ```
 
-**NOT YET WORKING CORRECTLY**
+## Creating a presentation
+**NOT YET WORKING CORRECTLY**   
 An example presentation directory can be created by running the init command.
 ```
 // Create a presentation directory called "presentation":
@@ -26,6 +28,8 @@ presenter init /absolute/path/to/presentation
 presenter init relative/path/to/presentation
 ```
 
+
+## Presenting a presentation
 To view a presentation, point presenter at a directory containing your presentation.
 ```
 // With an absolute path:
@@ -38,6 +42,7 @@ presenter serve relative/path/to/presentation
 presenter serve
 ```
 
+## Themes
 If you want to use one of the built in themes, supply the theme flag.
 ```
 presenter serve -t nauts
