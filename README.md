@@ -1,7 +1,12 @@
 # Presenter
 If you have edited any of the theme or asset files, you will need to generate the assets.go file again.
 ```
-make assets
+// If you have updated reveal.js.
+git submodule init
+git submodule update
+
+// Generate binary data.
+make bindata
 ```
 
 To build the project use gb.
