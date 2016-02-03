@@ -56,6 +56,7 @@ presenter serve
 ## Themes
 If you want to use one of the built in themes, supply the theme flag.
 ```
+// Use the Nauts.io theme
 presenter serve -t nauts
 
 // or

@@ -52,6 +52,7 @@ var commandServe = cli.Command{
 	},
 }
 
+// Initialize an example presentation.
 func doInit(c *cli.Context) {
 	presentationPath, _ := os.Getwd()
 	if len(c.Args()) > 0 {
@@ -64,6 +65,7 @@ func doInit(c *cli.Context) {
 	createExampleImageDirectory(presentationPath)
 }
 
+// Create the example presentation directory.
 func createExamplePresentationPath(presentationPath string) {
 	error := os.Mkdir(presentationPath, 0777)
 	if error != nil {
@@ -71,6 +73,7 @@ func createExamplePresentationPath(presentationPath string) {
 	}
 }
 
+// Create the example presentation slides.
 func createExampleSlides(presentationPath string) {
 	// Create slides file.
 	file, error := os.Create(path.Join(presentationPath, "slides.md"))
@@ -85,6 +88,7 @@ func createExampleSlides(presentationPath string) {
 	writer.Flush()
 }
 
+// Create the example presentation image directory.
 func createExampleImageDirectory(presentationPath string) {
 	error := os.Mkdir(path.Join(presentationPath, "img"), 0777)
 	if error != nil {
@@ -92,6 +96,7 @@ func createExampleImageDirectory(presentationPath string) {
 	}
 }
 
+// Create the example presentation theme.
 func createExampleTheme(presentationPath string) {
 	error := os.Mkdir(path.Join(presentationPath, "css"), 0777)
 	if error != nil {
@@ -111,6 +116,18 @@ func createExampleTheme(presentationPath string) {
 	writer.Flush()
 }
 
+// Check if the given file exists.
+func fileExists(file string) bool {
+	_, err := os.Stat(file)
+	return err != nil
+}
+
+// Check if the given path is absolute.
+func pathIsAbsolute(path string) bool {
+	return strings.HasPrefix(path, "/")
+}
+
+// Serve the presentation.
 func doServe(c *cli.Context) {
 	master := c.Bool("master")
 	theme := c.String("theme")
@@ -122,22 +139,23 @@ func doServe(c *cli.Context) {
 	}
 
 	// Check if the path is relative.
-	if !strings.HasPrefix(presentationPath, "/") {
+	if !pathIsAbsolute(presentationPath) {
 		presentationPath, _ = filepath.Abs(presentationPath)
 	}
 
 	// Check if there is a presentation file present.
-	if _, err := os.Stat(path.Join(presentationPath, "slides.md")); err != nil {
+	if fileExists(path.Join(presentationPath, "slides.md")) {
 		fmt.Printf("slides.md does not exist at %s\n", presentationPath)
 		os.Exit(1)
 	}
 
+	// Check if a theme was passed.
 	if theme != "" {
 		fmt.Println("Using one of the packaged themes ...")
 		http.Handle("/css/", http.FileServer(&assetfs.AssetFS{Asset, AssetDir, AssetInfo, "themes/" + theme}))
 		http.Handle("/fonts/", http.FileServer(&assetfs.AssetFS{Asset, AssetDir, AssetInfo, "themes/" + theme}))
 	} else {
-		if _, err := os.Stat(path.Join(presentationPath, "css", "theme.css")); err == nil {
+		if !fileExists(path.Join(presentationPath, "css", "theme.css")) {
 			fmt.Println("Found a theme, using it ...")
 			http.Handle("/css/", http.FileServer(http.Dir(presentationPath)))
 			http.Handle("/fonts/", http.FileServer(http.Dir(presentationPath)))
