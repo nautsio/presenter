@@ -5,11 +5,11 @@ PLUGIN   = reveal.js/plugin/...
 THEMES	 = themes/...
 ASSETS	 = assets/...
 
-bindata: assets.go
-	$(GOPATH)/bin/go-bindata -o=assets.go $(CSS) $(JS) $(LIB) $(PLUGIN) $(THEMES) $(ASSETS)
+bindata:
+	$(GOPATH)/bin/go-bindata -o=src/github.com/nautsio/presenter/assets.go $(CSS) $(JS) $(LIB) $(PLUGIN) $(THEMES) $(ASSETS)
 
 osx:
-	go build -o $(GOPATH)/bin/presenter.osx .
+	gb build all
 
 linux:
 	GOOS=linux GOARCH=386 CGO_ENABLED=0 go build -o $(GOPATH)/bin/presenter.linux .
