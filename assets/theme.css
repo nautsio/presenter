@@ -1,0 +1,91 @@
+/*
+Global styles
+*/
+body {}
+.reveal {}
+::selection {}
+.reveal .slides {}
+.reveal .slides > section, .reveal .slides > section > section {}
+
+/*
+Headers
+*/
+.reveal h1 {}
+.reveal h2 {}
+.reveal h3 {}
+.reveal h4 {}
+
+/*
+Other
+*/
+.reveal p {}
+
+.reveal img {}
+.reveal video {}
+.reveal iframe {}
+
+.reveal strong, .reveal b {}
+.reveal em, .reveal i {}
+
+.reveal ol {}
+.reveal ul {}
+.reveal li {}
+
+.reveal dt {}
+.reveal dd {}
+
+.reveal blockquote {}
+.reveal q {}
+
+.reveal pre {}
+.reveal code {}
+
+.reveal table {}
+.reveal table th {}
+  .reveal table tr {}
+.reveal table td {}
+
+.reveal sup {}
+.reveal sub {}
+.reveal small {}
+
+/*
+Links
+*/.reveal a {}
+.reveal a:hover {}
+
+/*
+Images
+*/
+.reveal section img {}
+.reveal section img.plain {}
+.reveal a img {}
+.reveal a:hover img {}
+
+/*
+Navigation controls
+*/
+.reveal .controls .navigate-left, .reveal .controls .navigate-left.enabled {}
+.reveal .controls .navigate-right, .reveal .controls .navigate-right.enabled {}
+.reveal .controls .navigate-up, .reveal .controls .navigate-up.enabled {}
+.reveal .controls .navigate-down, .reveal .controls .navigate-down.enabled {}
+.reveal .controls .navigate-left.enabled:hover {}
+.reveal .controls .navigate-right.enabled:hover {}
+.reveal .controls .navigate-up.enabled:hover {}
+.reveal .controls .navigate-down.enabled:hover {}
+
+/*
+Progress bar
+*/
+.reveal .progress {}
+.reveal .progress span {}
+
+/*
+Slide number
+*/
+.reveal .slide-number {}
+.center {}
+.reveal section img {}
+.reveal section img.noblock {}
+.reveal section img.header {}
+.reveal ol, .reveal dl, .reveal ul {}

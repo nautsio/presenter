@@ -53,16 +53,61 @@ var commandServe = cli.Command{
 }
 
 func doInit(c *cli.Context) {
+	presentationPath, _ := os.Getwd()
+	if len(c.Args()) > 0 {
+		presentationPath = c.Args()[0]
+	}
+
+	createExamplePresentationPath(presentationPath)
+	createExampleSlides(presentationPath)
+	createExampleTheme(presentationPath)
+	createExampleImageDirectory(presentationPath)
+}
+
+func createExamplePresentationPath(presentationPath string) {
+	error := os.Mkdir(presentationPath, 0777)
+	if error != nil {
+		log.Fatal(error)
+	}
+}
+
+func createExampleSlides(presentationPath string) {
 	// Create slides file.
-	file, error := os.Create("slides.md")
+	file, error := os.Create(path.Join(presentationPath, "slides.md"))
 	if error != nil {
 		log.Fatal(error)
 	}
 
 	// Write contents of example slides to slides file.
 	writer := bufio.NewWriter(file)
-	slides, _ := Asset("theme/slides.md")
+	slides, _ := Asset("assets/slides.md")
 	writer.Write(slides)
+	writer.Flush()
+}
+
+func createExampleImageDirectory(presentationPath string) {
+	error := os.Mkdir(path.Join(presentationPath, "img"), 0777)
+	if error != nil {
+		log.Fatal(error)
+	}
+}
+
+func createExampleTheme(presentationPath string) {
+	error := os.Mkdir(path.Join(presentationPath, "css"), 0777)
+	if error != nil {
+		log.Fatal(error)
+	}
+
+	// Create theme file.
+	file, error := os.Create(path.Join(presentationPath, "css", "theme.css"))
+	if error != nil {
+		log.Fatal(error)
+	}
+
+	// Write contents of example theme to theme file.
+	writer := bufio.NewWriter(file)
+	theme, _ := Asset("assets/theme.css")
+	writer.Write(theme)
 	writer.Flush()
 }
 
