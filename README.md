@@ -13,7 +13,8 @@ The structure of a presentation folder is expected to look similar to this:
 └── slides.md       (slides are expected to be in the slides.md file)
 ```
 
-An example presentation directory can be created by running the init command. (NOT YET WORKING CORRECTLY)
+**NOT YET WORKING CORRECTLY**
+An example presentation directory can be created by running the init command.
 ```
 // Create a presentation directory called "presentation":
 presenter init presentation
