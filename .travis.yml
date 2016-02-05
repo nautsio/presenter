@@ -17,4 +17,5 @@ install:
 
 script:
   - gb vendor restore
-  - gb build
+  - make bindata
+  - gb build all
