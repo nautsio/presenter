@@ -1,4 +1,4 @@
-# Presenter
+# Presenter [![Build Status](https://travis-ci.org/nautsio/presenter.svg?branch=master)](https://travis-ci.org/nautsio/presenter)
 If you have edited any of the theme or asset files, you will need to generate the assets.go file again.
 ```
 // If you have updated reveal.js.
