@@ -8,7 +8,7 @@
 !SUB
 
 
-# And as a side NOTE...
+# And as a side !NOTE...
 
 
 !NOTE

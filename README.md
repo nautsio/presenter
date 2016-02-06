@@ -22,7 +22,7 @@ The structure of a presentation folder is expected to look similar to this:
 ```
 ├── css             (custom styling should go in theme.css)
 │   └── theme.css
-├── img             (images that are used in the presentation or self-made theme go here)
+├── img             (images in the presentation or self-made theme go here)
 └── slides.md       (slides are expected to be in the slides.md file)
 ```
 

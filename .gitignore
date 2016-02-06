@@ -2,3 +2,4 @@ bin/
 pkg/
 vendor/src/
 src/github.com/nautsio/presenter/assets.go
+.DS_Store
