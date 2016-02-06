@@ -8,6 +8,7 @@ import (
 	"os"
 	"path"
 	"path/filepath"
+	"sort"
 	"strings"
 	"text/template"
 
@@ -21,6 +22,9 @@ type Option struct {
 	Markdown string
 	Master   bool
 }
+
+// Built in themes.
+var themes = []string{"nauts", "xebia"}
 
 // Commands is an array containing the available commands.
 var Commands = []cli.Command{
@@ -118,6 +122,13 @@ func createExampleTheme(presentationPath string) {
 	writer.Flush()
 }
 
+// Check if the given theme exists.
+func themeExists(theme string) bool {
+	sort.Strings(themes)
+	i := sort.SearchStrings(themes, theme)
+	return (i < len(themes) && themes[i] == theme)
+}
+
 // Check if the given file exists.
 func fileExists(file string) bool {
 	_, err := os.Stat(file)
@@ -152,7 +163,7 @@ func doServe(c *cli.Context) {
 	}
 
 	// Check if a theme was passed.
-	if theme != "" {
+	if themeExists(theme) {
 		fmt.Println("Using one of the packaged themes ...")
 		http.Handle("/css/", http.FileServer(&assetfs.AssetFS{Asset, AssetDir, AssetInfo, "themes/" + theme}))
 		http.Handle("/fonts/", http.FileServer(&assetfs.AssetFS{Asset, AssetDir, AssetInfo, "themes/" + theme}))
