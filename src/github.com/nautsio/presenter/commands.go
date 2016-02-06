@@ -29,17 +29,19 @@ var Commands = []cli.Command{
 }
 
 var commandInit = cli.Command{
-	Name:        "init",
-	Usage:       "",
-	Description: "",
-	Action:      doInit,
+	Name:      "init",
+	ShortName: "i",
+	Usage:     "Initialize an empty presentation directory",
+	ArgsUsage: "<destination path>",
+	Action:    doInit,
 }
 
 var commandServe = cli.Command{
-	Name:        "serve",
-	Usage:       "",
-	Description: "",
-	Action:      doServe,
+	Name:      "serve",
+	ShortName: "s",
+	Usage:     "Serve a presentation directory",
+	ArgsUsage: "<presentation directory>",
+	Action:    doServe,
 	Flags: []cli.Flag{
 		cli.BoolFlag{
 			Name:  "master, m",
