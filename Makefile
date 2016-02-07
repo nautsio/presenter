@@ -9,10 +9,10 @@ bindata:
 	$(GOPATH)/bin/go-bindata -o=src/github.com/nautsio/presenter/assets.go $(CSS) $(JS) $(LIB) $(PLUGIN) $(THEMES) $(ASSETS)
 
 osx:
-	gb build all
+	GOOS=darwin GOARCH=amd64 gb build all
 
 linux:
-	GOOS=linux GOARCH=386 CGO_ENABLED=0 go build -o $(GOPATH)/bin/presenter.linux .
+	GOOS=linux GOARCH=amd64 gb build
 
 windows:
-	GOOS=windows GOARCH=386 go build -o $(GOPATH)/bin/presenter.exe .
+	GOOS=windows GOARCH=amd64 gb build
