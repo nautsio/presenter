@@ -19,3 +19,14 @@ script:
   - gb vendor restore
   - make bindata
   - make release
+
+deploy:
+  provider: releases
+  api_key: $GH_TOKEN
+  file:
+    - "bin/presenter-darwin-amd64"
+    - "bin/presenter-linux-amd64"
+    - "bin/presenter-windows-amd64.exe"
+  skip_cleanup: true
+  on:
+    tags: true
