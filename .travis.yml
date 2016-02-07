@@ -19,4 +19,4 @@ install:
 script:
   - gb vendor restore
   - make bindata
-  - gb build all
+  - make release
