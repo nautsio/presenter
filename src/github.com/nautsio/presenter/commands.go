@@ -3,6 +3,7 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
@@ -140,6 +141,22 @@ func pathIsAbsolute(path string) bool {
 	return strings.HasPrefix(path, "/")
 }
 
+func concatFiles(path string, extension string) []byte {
+	d, _ := os.Open(path)
+	defer d.Close()
+	files, _ := d.Readdir(-1)
+	var content []byte
+	for _, file := range files {
+		if file.Mode().IsRegular() && filepath.Ext(file.Name()) == extension {
+			c, _ := ioutil.ReadFile(file.Name())
+			content = append(content, '\n')
+			content = append(content, c...)
+			content = append(content, '\n')
+		}
+	}
+	return content
+}
+
 // Serve the presentation.
 func doServe(c *cli.Context) {
 	master := c.Bool("master")
@@ -157,10 +174,10 @@ func doServe(c *cli.Context) {
 	}
 
 	// Check if there is a presentation file present.
-	if fileExists(path.Join(presentationPath, "slides.md")) {
-		fmt.Printf("slides.md does not exist at %s\n", presentationPath)
-		os.Exit(1)
-	}
+	// if fileExists(path.Join(presentationPath, "slides.md")) {
+	// 	fmt.Printf("slides.md does not exist at %s\n", presentationPath)
+	// 	os.Exit(1)
+	// }
 
 	// Check if a theme was passed.
 	if themeExists(theme) {
@@ -179,8 +196,9 @@ func doServe(c *cli.Context) {
 
 	// Handle the slides.
 	http.HandleFunc("/slides.md", func(w http.ResponseWriter, r *http.Request) {
-		t, _ := template.ParseFiles(path.Join(presentationPath, "slides.md"))
-		t.Execute(w, "")
+		slides := concatFiles(presentationPath, ".md")
+		fmt.Printf("%s\n", slides)
+		w.Write(slides)
 	})
 
 	// Handle images.
