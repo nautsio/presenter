@@ -2,7 +2,6 @@ package main
 
 import (
 	"bufio"
-	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -158,22 +157,22 @@ func doServe(c *cli.Context) {
 
 	// Check if there is a presentation file present.
 	if fileExists(path.Join(presentationPath, "slides.md")) {
-		fmt.Printf("slides.md does not exist at %s\n", presentationPath)
+		log.Printf("slides.md does not exist at %s\n", presentationPath)
 		os.Exit(1)
 	}
 
 	// Check if a theme was passed.
 	if themeExists(theme) {
-		fmt.Println("Using one of the packaged themes ...")
+		log.Printf("Using build-in theme [%s]\n", theme)
 		http.Handle("/css/", http.FileServer(&assetfs.AssetFS{Asset, AssetDir, AssetInfo, "themes/" + theme}))
 		http.Handle("/fonts/", http.FileServer(&assetfs.AssetFS{Asset, AssetDir, AssetInfo, "themes/" + theme}))
 	} else {
 		if !fileExists(path.Join(presentationPath, "css", "theme.css")) {
-			fmt.Println("Found a theme, using it ...")
+			log.Println("Found a theme in the css directory, using it...")
 			http.Handle("/css/", http.FileServer(http.Dir(presentationPath)))
 			http.Handle("/fonts/", http.FileServer(http.Dir(presentationPath)))
 		} else {
-			fmt.Println("No theme found ...")
+			log.Println("No theme found ...")
 		}
 	}
 
@@ -202,9 +201,10 @@ func doServe(c *cli.Context) {
 		indexTemplate.Execute(w, opt)
 	})
 
-	fmt.Println("Opening browser and redirecting to the presentation ...")
+	log.Println("Serving presentation on http://localhost:8989")
+	log.Println("Opening browser and redirecting to the presentation, press Ctrl-C to stop ...")
 	browser.OpenURL("http://localhost:8989")
 
 	err := http.ListenAndServe(":8989", nil)
-	panic("Error while serving slides: " + err.Error())
+	log.Fatalf("Error while serving slides: %s\n", err.Error())
 }
