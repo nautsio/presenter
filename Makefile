@@ -6,7 +6,7 @@ THEMES	 = themes/...
 ASSETS	 = assets/...
 
 bindata:
-	$(GOPATH)/bin/go-bindata -o=src/github.com/nautsio/presenter/assets.go $(CSS) $(JS) $(LIB) $(PLUGIN) $(THEMES) $(ASSETS)
+	$(GOPATH)/bin/go-bindata -o=src/github.com/nautsio/presenter/bindata/assets.go -pkg=bindata $(CSS) $(JS) $(LIB) $(PLUGIN) $(THEMES) $(ASSETS)
 
 release: osx linux windows
 
