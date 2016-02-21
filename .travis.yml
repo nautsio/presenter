@@ -2,6 +2,7 @@ language: go
 
 go:
   - 1.5
+  - 1.6
   - tip
 
 git:
@@ -30,4 +31,4 @@ deploy:
   skip_cleanup: true
   on:
     tags: true
-    go: 1.5
+    go: 1.6
